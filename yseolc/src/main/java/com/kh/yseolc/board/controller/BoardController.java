@@ -18,7 +18,7 @@ import com.kh.yseolc.board.model.service.BoardService;
 
 @Controller
 public class BoardController {
-
+	
 	@Autowired
 	private BoardService bService;
 
@@ -27,7 +27,8 @@ public class BoardController {
 
 	public static final int LIMIT = 10;
 
-	@RequestMapping(value = "blist.do", method = RequestMethod.GET)
+	// insert된 게시글 리스트 select
+	@RequestMapping(value = "/blist.do", method = RequestMethod.GET)
 	public ModelAndView boardListService(@RequestParam(name = "page", defaultValue = "1") int page,
 			@RequestParam(name = "keyword", required = false) String keyword, ModelAndView mv) {
 		try {
@@ -51,7 +52,8 @@ public class BoardController {
 		return mv;
 	}
 
-	@RequestMapping(value = "bDetail.do", method = RequestMethod.GET)
+	// 게시글 상세보기
+	@RequestMapping(value = "/bDetail.do", method = RequestMethod.GET)
 	public ModelAndView boardDetail(@RequestParam(name = "board_num") String board_num,
 			@RequestParam(name = "page", defaultValue = "1") int page, ModelAndView mv) {
 		try {
@@ -68,7 +70,8 @@ public class BoardController {
 		return mv;
 	}
 
-	@RequestMapping(value = "bRenew.do", method = RequestMethod.GET)
+	// 수정
+	@RequestMapping(value = "/bRenew.do", method = RequestMethod.GET)
 	public ModelAndView boardDetail(@RequestParam(name = "board_num") String board_num, ModelAndView mv) {
 		try {
 			mv.addObject("board", bService.selectBoard(1, board_num));
@@ -80,12 +83,14 @@ public class BoardController {
 		return mv;
 	}
 
-	@RequestMapping(value = "writeForm.do", method = RequestMethod.GET)
+	// 게시글 작성 페이지
+	@RequestMapping(value = "/writeForm.do", method = RequestMethod.GET)
 	public String boardInsertForm(ModelAndView mv) {
-		return "board/writeForm";
+		return "board/writeForm"; //페이지에서 작성 후 form action = "bInsert.do"로 들어오도록 함!
 	}
-
-	@RequestMapping(value = "bInsert.do", method = RequestMethod.POST)
+	
+	// 작성된 게시글 insert // parameter로 report(첨부파일) 가지고 들어가는 부분 잘 볼 것!!!
+	@RequestMapping(value = "/bInsert.do", method = RequestMethod.POST)
 	public ModelAndView boardInsert(Board b, @RequestParam(name = "upfile", required = false) MultipartFile report,
 			HttpServletRequest request, ModelAndView mv) {
 		try {
@@ -102,7 +107,7 @@ public class BoardController {
 	}
 
 	// 업데이트
-	@RequestMapping(value = "bUpdate.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/bUpdate.do", method = RequestMethod.POST)
 	public ModelAndView boardUpdate(Board b, @RequestParam(name = "page", defaultValue = "1") int page,
 			@RequestParam("upfile") MultipartFile report, HttpServletRequest request, ModelAndView mv) {
 		try {
@@ -110,15 +115,12 @@ public class BoardController {
 			if (report != null && !report.equals("")) {
 				removeFile(b.getBoard_file(), request);
 				saveFile(report, request);
-				b.setBoard_file(report.getOriginalFilename());
+				b.setBoard_file(report.getOriginalFilename());		// 저장된 파일명을 vo에 set
 			}
-			if (bService.updateBoard(b) != null) {
 				mv.addObject("board_num", bService.updateBoard(b).getBoard_num());
 				mv.addObject("currentPage", page);
 				mv.setViewName("redirect:bDetail.do");
-			} else {
-				// 이전 화면으로 이동?
-			}
+
 		} catch (Exception e) {
 			mv.addObject("msg", e.getMessage());
 			mv.setViewName("errorPage");
@@ -126,7 +128,8 @@ public class BoardController {
 		return mv;
 	}
 
-	@RequestMapping(value = "bDelete.do", method = RequestMethod.GET)
+	// 삭제
+	@RequestMapping(value = "/bDelete.do", method = RequestMethod.GET)
 	public ModelAndView boardDelete(@RequestParam(name = "board_num") String board_num,
 			@RequestParam(name = "page", defaultValue = "1") int page, HttpServletRequest request, ModelAndView mv) {
 		try {

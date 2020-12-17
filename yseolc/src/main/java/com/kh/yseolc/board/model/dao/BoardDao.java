@@ -27,6 +27,7 @@ public class BoardDao {
 		return sqlSession.selectList("Board.searchList", keyword);
 	}
 
+	// 0~9, 10~19, 20~29
 	public List<Board> selectList(int startPage, int limit) { // 특정 페이지 단위의 게시글 조회
 		int startRow = (startPage - 1) * limit;
 		RowBounds row = new RowBounds(startRow, limit);

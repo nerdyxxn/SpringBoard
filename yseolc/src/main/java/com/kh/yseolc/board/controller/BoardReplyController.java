@@ -2,6 +2,7 @@ package com.kh.yseolc.board.controller;
 
 import java.io.PrintWriter;
 
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.yseolc.board.model.domain.BoardReply;
@@ -21,11 +23,11 @@ public class BoardReplyController {
 
 	@Autowired
 	private BoardReply br;
-
+	
 	@Autowired
 	private BoardReplyService brService;
 
-	@RequestMapping(value = "brInsert.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/brInsert.do", method = RequestMethod.GET)
 	public ModelAndView boardReplyInsert(@RequestParam(name = "board_num") String board_num,
 			@RequestParam(name = "page", defaultValue = "1") int page, BoardReply br, ModelAndView mv) {
 		try {
@@ -40,14 +42,15 @@ public class BoardReplyController {
 		return mv;
 	}
 
-	@RequestMapping(value = "brUpdate.do", method = RequestMethod.POST)
+	@ResponseBody //결과를 response 객체에 담아서 보내는 어노테이션
+	@RequestMapping(value = "/brUpdate.do", method = RequestMethod.POST)
 	public void boardReplyUpdate(HttpServletResponse response, BoardReply br) {
 		PrintWriter out = null;
 		JSONObject job = new JSONObject();
 		try {
 			job.put("ack", brService.updateBoardReply(br));
 			out = response.getWriter();
-			out.append(job.toJSONString());
+			out.append(job.toJSONString());		// JSONObject 를 string 형태로 리턴한다.
 		} catch (Exception e) {
 			job.put("ack", -1);
 		} finally {
@@ -55,8 +58,23 @@ public class BoardReplyController {
 			out.close();
 		}
 	}
+	
+	// 쌤 버전으로 작성!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	@ResponseBody //결과를 response 객체에 담아서 보내는 어노테이션
+	@RequestMapping(value = "/brUpdateRB.do", method = RequestMethod.POST)
+	public String boardReplyUpdateRB(BoardReply br) {
+		JSONObject job = new JSONObject();
+		try {
+			job.put("ack", brService.updateBoardReply(br));
+		} catch (Exception e) {
+			job.put("ack", -1);
+		} finally {
+			return job.toJSONString();
+		}
+	}
 
-	@RequestMapping(value = "brDelete.do", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/brDelete.do", method = RequestMethod.POST)
 	public void boardReplyDelete(HttpServletResponse response, BoardReply br) {
 		PrintWriter out = null;
 		JSONObject job = new JSONObject();

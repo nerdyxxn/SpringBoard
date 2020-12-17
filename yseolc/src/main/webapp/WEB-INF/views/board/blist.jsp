@@ -8,7 +8,7 @@
 <title>BOARD LIST</title>
 <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/jquery-3.2.1.min.js"></script>
+	src="${pageContext.request.contextPath}/resources/js/jquery-3.5.1.min.js"></script>
 <script type="text/javascript">
 	$(function() {
 		$('form[name=listForm]').on(

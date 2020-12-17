@@ -1,12 +1,11 @@
 package com.kh.yseolc.board.model.domain;
 
-import java.io.Serializable;
 import java.sql.Date;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class BoardReply implements Serializable {
+public class BoardReply implements java.io.Serializable {
 	private static final long serialVersionUID = 30001L;
 	private String comment_id;
 	private String board_num;
@@ -17,7 +16,7 @@ public class BoardReply implements Serializable {
 
 	public BoardReply() {
 	}
-	
+
 	public BoardReply(String comment_id, String comment_pwd, String comments) {
 		super();
 		this.comment_id = comment_id;
@@ -47,14 +46,12 @@ public class BoardReply implements Serializable {
 		this.comments = comments;
 	}
 
-	@Override // toString() 메소드 오버라이딩
+	@Override
 	public String toString() {
 		return "BoardReply [comment_id=" + comment_id + ", board_num=" + board_num + ", comment_name=" + comment_name
 				+ ", comment_pwd=" + comment_pwd + ", comments=" + comments + ", regdate=" + regdate + "]";
 	}
 
-	/* ***** 필드에 대한 Getter & Setter 구현 **** */
-	
 	public String getComment_id() {
 		return comment_id;
 	}
